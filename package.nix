@@ -1,12 +1,12 @@
-{ lib, stdenv, fetchurl }:
+{ lib, stdenv, fetchurl, ... }:
 let
-  metadata = builtins.fromJSON ./metadata.json;
+  metadata = lib.importJSON ./metadata.json;
 in
 stdenv.mkDerivation {
   pname = "pulumi-cli-unwrapped";
   inherit (metadata) version;
 
-  src = fetchurl metadata.${stdenv.hostPlatform.system};
+  src = fetchurl metadata.systems.${stdenv.hostPlatform.system};
 
   installPhase = ''
     install -D -t $out/bin/ *

@@ -1,6 +1,13 @@
-{ pkgs, stdenv, ... }:
+{ pkgs, pulumi-cli, ... }:
 pkgs.buildFHSEnv {
+  name = "pulumi-fhs";
   targetPkgs = pkgs: (with pkgs; [
-    curl wget stdenv.cc
+    pulumi-cli
+    coreutils nushell nodejs curl
   ]);
+
+  profile = ''
+    export FHS=1;
+  '';
+  # runScript = "nu";
 }

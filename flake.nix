@@ -1,16 +1,31 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      flake = {};
-      systems = ["x86_64-linux"];
-      perSystem = { config, pkgs, stdenv, ... }: {
-        packages.default = pkgs.callPackage ./package.nix {};
-        devShells.default = import ./fhs { inherit config pkgs stdenv; };
-      };
+  outputs = { self, nixpkgs }:
+    let
+      overlays = [
+        (final: prev: rec {})
+      ];
+      supportedSystems = [ "x86_64-linux" ];
+
+      forEachSupportedSystem = f: nixpkgs.lib.genAttrs supportedSystems (system: f rec {
+        pkgs = import nixpkgs { inherit overlays system; };
+
+        pulumi-cli = pkgs.callPackage ./package.nix {};
+        fhs = import ./fhs.nix { inherit pkgs pulumi-cli; };
+      });
+    in
+    {
+      packages = forEachSupportedSystem ({ pulumi-cli, fhs, ... }: {
+        default = pulumi-cli;
+
+        pulumi-cli = pulumi-cli;
+        fhs = fhs;
+      });
+      devShells = forEachSupportedSystem ({ fhs, ... }: {
+        default = fhs.env;
+      });
     };
 }

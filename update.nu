@@ -14,11 +14,17 @@ def sha256sum [checksum: table, url: string] {
   $checksum | where file == ($url | path basename) | get sha256 | first
 }
 
+# Be careful of GitHub Rate Limiting
+def findLatestVersion [] {
+  http get "https://api.github.com/repos/pulumi/pulumi/releases/latest" | get tag_name | str trim --char 'v'
+}
+
 def generateMetadata [rec: record] {
   $rec | to json
 }
 
-def main [version: string] {
+def main [versionTag: string = "latest"] {
+  let version = if $versionTag == "latest" { findLatestVersion } else { $versionTag | str trim --char 'v' };
   let checksum = getChecksum $version;
 
   mut nixos = {};

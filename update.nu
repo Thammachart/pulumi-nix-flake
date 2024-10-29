@@ -34,4 +34,5 @@ def main [versionTag: string = "latest"] {
     $nixos = $nixos | insert $"($sys.archNix)-($sys.os)" { url: $url, sha256: $sha256 };
   }
   generateMetadata { version: $version, systems: $nixos } | save --force metadata.json;
+  nix flake update;
 }

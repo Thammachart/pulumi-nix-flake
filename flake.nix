@@ -20,7 +20,7 @@
       packages = forEachSupportedSystem ({ pulumi-cli, ... }: {
         default = pulumi-cli;
 
-        pulumi-cli = pulumi-cli;
+        inherit pulumi-cli;
       });
     };
 }

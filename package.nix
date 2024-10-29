@@ -8,12 +8,11 @@ stdenv.mkDerivation {
 
   src = fetchurl metadata.systems.${stdenv.hostPlatform.system};
 
+  phases = [ "unpackPhase" "installPhase" ];
+
   installPhase = ''
     install -D -t $out/bin/ *
   '';
-
-  # nativeBuildInputs = [];
-  # buildInputs = [ stdenv.cc.cc.libgcc or null ];
 
   meta = with lib; {
     homepage = "https://pulumi.io/";

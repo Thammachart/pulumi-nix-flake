@@ -14,18 +14,13 @@
         pkgs = import nixpkgs { inherit overlays system; };
 
         pulumi-cli = pkgs.callPackage ./package.nix {};
-        fhs = import ./fhs.nix { inherit pkgs pulumi-cli; };
       });
     in
     {
-      packages = forEachSupportedSystem ({ pulumi-cli, fhs, ... }: {
+      packages = forEachSupportedSystem ({ pulumi-cli, ... }: {
         default = pulumi-cli;
 
         pulumi-cli = pulumi-cli;
-        fhs = fhs;
-      });
-      devShells = forEachSupportedSystem ({ fhs, ... }: {
-        default = fhs.env;
       });
     };
 }

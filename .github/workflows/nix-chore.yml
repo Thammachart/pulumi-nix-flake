@@ -1,0 +1,38 @@
+name: Nix Chore
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  nix-flake-update:
+    name: "Nix Flake Update"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v30
+      - uses: hustcer/setup-nu@v3
+      - id: check
+        shell: nu {0}
+        run: |
+          nu update.nu
+          let report = (git status --porcelain)
+          $"report=($report)" | save --append $env.GITHUB_OUTPUT
+      - id: cpr
+        name: Create Pull Request (if changed)
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: "changes/nix-flake"
+          commit-message: |
+            changes detected
+
+            ${{ steps.check.outputs.report }}
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"

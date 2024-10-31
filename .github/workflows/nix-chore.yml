@@ -19,16 +19,16 @@ jobs:
       - id: check
         shell: nu {0}
         run: |
-          nu update.nu
-          let report = (git status --porcelain)
-          $"report=($report)" | save --append $env.GITHUB_OUTPUT
+          nu update.nu;
+          let report = (git status --porcelain);
+          $"report=($report)" | save --append $env.GITHUB_OUTPUT;
       - id: cpr
         name: Create Pull Request (if changed)
         uses: peter-evans/create-pull-request@v7
         with:
           branch: "changes/nix-flake"
           commit-message: |
-            changes detected
+            [CI-generated] changes detected
 
             ${{ steps.check.outputs.report }}
       - name: Check outputs

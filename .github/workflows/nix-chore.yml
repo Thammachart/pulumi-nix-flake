@@ -1,4 +1,3 @@
-name: Nix Chore
 on:
   schedule:
     - cron: "0 1 * * *"
@@ -9,9 +8,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  nix-flake-update:
-    name: "Nix Flake Update"
+  nix-chore:
     runs-on: ubuntu-latest
     steps:
-      - name: "Nix Chore Action"
-        uses: Thammachart/nix-chore-action@main
+      - uses: Thammachart/nix-chore-action@main

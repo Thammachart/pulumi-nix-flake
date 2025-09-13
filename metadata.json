@@ -1,9 +1,9 @@
 {
-  "version": "3.194.0",
+  "version": "3.196.0",
   "systems": {
     "x86_64-linux": {
-      "url": "https://get.pulumi.com/releases/sdk/pulumi-v3.194.0-linux-x64.tar.gz",
-      "sha256": "95d698a8b2f40201bd329f9e26b3049dcb686da931f7b917c35299ddb974b5ec"
+      "url": "https://get.pulumi.com/releases/sdk/pulumi-v3.196.0-linux-x64.tar.gz",
+      "sha256": "acc8750a1bf7a95b5215e602b757c31000cbe309493810b54ba9312830425cd3"
     }
   }
 }
